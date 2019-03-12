@@ -18,7 +18,7 @@ def zen():
 
 @cli.command(help=click.style("Create new project skeleton.", fg="green"))
 @click.argument('destination_path', type=click.Path(exists=True))
-def new_project(destination_path):
+def new(destination_path):
     """Create skeleton for new new python package."""
 
     NewProject(destination_path).run()

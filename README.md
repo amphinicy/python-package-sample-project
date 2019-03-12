@@ -16,7 +16,7 @@ A sample project on how to make a python package.
 
 # Create skeleton of new python package project
 # replace "_destination_path_" with actual path
-> sample new-project _destination_path_
+> sample new _destination_path_
 ```
 
 ## Documentation
