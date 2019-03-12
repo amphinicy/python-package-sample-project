@@ -7,18 +7,18 @@ def readme():
 
 
 setup(
-    name='sample',
-    version='1.0.0',
+    name='${project_name}',
+    version='0.1.0',
 
-    description='A sample project on how to make a python package',
+    description='${project_description}',
     long_description=readme(),
     long_description_content_type='text/markdown',
 
-    url='https://github.com/amphinicy/python-package-sample-project',
+    url='${project_github_url}',
     licence='MIT',
 
-    author='Ivan Arar',
-    author_email='ivan.arar@amphinicy.com',
+    author='${author_name}',
+    author_email='${author_email}',
 
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -27,24 +27,20 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.7',
     ],
-    keywords='sample, python, package',
+    keywords='${project_tags}',
 
     packages=find_packages(),
-    package_data={'': ['new_project_requirements.txt',
-                       'new_project_travis.yml']},
     install_requires=[
         'click~=7.0',
-        'GitPython~=2.1.11',
-        'python-slugify~=3.0.0',
     ],
 
     project_urls={
-        'Source': 'https://github.com/amphinicy/python-package-sample-project',
+        'Source': '${project_github_url}',
     },
 
     entry_points={
         'console_scripts': [
-            'sample=sample.cli:cli'
+            '${project_name}=${project_name}.cli:cli'
         ],
     },
 )
