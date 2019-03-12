@@ -21,4 +21,4 @@ A sample project on how to make a python package.
 
 ## Documentation
 
-Read [the documentation on how to start a new python package project](https://pm.amphinicy.com/confluence/display/AT/Creating+Python+Library+Repository).
+Read [the documentation on how to start a new python package project](https://pm.amphinicy.com/confluence/display/AT/Creating+Python+Library+Repository+-+Using+Sample+Package).
