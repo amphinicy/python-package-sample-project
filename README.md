@@ -5,7 +5,7 @@ A sample project on how to make a python package.
 ## Installation
 
 ```bash
-> pip install https://github.com/amphinicy/python-package-sample-project/archive/master.zip
+> python3 -m pip install https://github.com/amphinicy/python-package-sample-project/archive/master.zip
 ```
 
 ## CLI Usage
