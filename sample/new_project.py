@@ -16,17 +16,18 @@ PROJECT_REQUIREMENTS = 'requirements.txt'
 NEW_PROJECT_REQUIREMENTS = 'new_project_requirements.txt'
 PROJECT_TRAVIS = '.travis.yml'
 NEW_PROJECT_TRAVIS = 'new_project_travis.yml'
+NEW_PROJECT_TRAVIS_PYPI = 'new_project_travis_pypi.yml'
 PROJECT_INIT = '__init__.py'
 PROJECT_CLI = 'cli.py'
 NEW_PROJECT_CLI = 'new_project_cli.py'
 
 
-Step = namedtuple('Step', 'fn index rollback '
-                          'divider_up divider_down')
+Step = namedtuple('Step', 'fn index rollback validator divider_up divider_down')
 
 
 def register_step(index: bool,
                   rollback: AnyStr = None,
+                  validator: AnyStr = None,
                   divider_up: Callable = lambda: None,
                   divider_down: Callable = lambda: None) \
         -> Callable:
@@ -37,6 +38,7 @@ def register_step(index: bool,
             'fn': fn,
             'index': index,
             'rollback': rollback,
+            'validator': validator,
             'divider_up': divider_up,
             'divider_down': divider_down
         })
@@ -76,6 +78,10 @@ class NewProject:
         self._author_email = None
         self._project_tags = None
 
+        self._use_travis = False
+        self._use_pypi = False
+        self._pypi_username = None
+
         self._project_root_path = None
         self._sample_lib_root_path = None
         self._project_app_dir = None
@@ -92,6 +98,13 @@ class NewProject:
         self._author_name = click.prompt('Enter project author name')
         self._author_email = click.prompt('Enter project author e-mail')
         self._project_tags = click.prompt('Enter project project tags')
+
+        click.echo()
+
+        self._use_travis = click.confirm('Do you want to use Travis CI?')
+        if self._use_travis:
+            self._use_pypi = click.confirm('Do you want to upload your project to pypi.org?')
+            self._pypi_username = click.prompt('Enter your pypi.org username')
 
     @register_step(index=1, divider_down=lambda: click.echo())
     def _clone_git_repo(self) -> None:
@@ -134,7 +147,7 @@ class NewProject:
         with open(os.path.join(self._project_root_path, PROJECT_REQUIREMENTS), 'w') as f:
             f.write(requirements_template)
 
-    @register_step(index=4, rollback='_remove_git_repo')
+    @register_step(index=4, validator='_use_travis', rollback='_remove_git_repo')
     def _create_travis_yml(self) -> None:
         """Creating .travis.yml ..."""
 
@@ -142,7 +155,28 @@ class NewProject:
             travis_template = f.read()
 
         with open(os.path.join(self._project_root_path, PROJECT_TRAVIS), 'w') as f:
-            f.write(travis_template)
+            if self._use_pypi:
+                with open(os.path.join(self._sample_lib_root_path,
+                                       NEW_PROJECT_TRAVIS_PYPI)) as fi:
+                    t = Template(fi.read())
+                    travis_pypi_template = t.substitute(
+                        pypi_username=self._pypi_username,
+                        pypi_encripted_password='_enter_password_here_'
+                    )
+
+                    click.echo()
+                    click.secho('To enter encrypted pypi.org password in '
+                                '.travis.yml do the following:', fg='green')
+                    click.secho('- install ruby', fg='green')
+                    click.echo(click.style('- install Travis CLI: ', fg='green') +
+                               'gem install travis -v 1.8.9 --no-rdoc --no-ri')
+                    click.echo(click.style('- go to git repo root and type: ', fg='green') +
+                               'travis encrypt your-password-here --add deploy.password')
+                    click.echo()
+            else:
+                travis_pypi_template = ''
+
+            f.write(f'{travis_template}\n{travis_pypi_template}')
 
     @register_step(index=5, rollback='_remove_git_repo')
     def _create_app_dir(self) -> None:
@@ -204,6 +238,10 @@ class NewProject:
         click.secho(NewProject.__doc__, fg='green')
 
         for step in self.steps:
+            if step.validator:
+                if not getattr(self, step.validator):
+                    continue
+
             step.divider_up()
             click.echo(step.fn.__doc__)
 

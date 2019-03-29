@@ -1,0 +1,10 @@
+deploy:
+  skip_cleanup: true
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: "${pypi_username}"
+  password:
+    secure: "${pypi_encripted_password}"
+  skip_existing: true
+  on:
+    branch: master
