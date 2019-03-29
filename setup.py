@@ -31,7 +31,8 @@ setup(
 
     packages=find_packages(),
     package_data={'': ['new_project_requirements.txt',
-                       'new_project_travis.yml']},
+                       'new_project_travis.yml',
+                       'new_project_travis_pypi.yml']},
     install_requires=[
         'click~=7.0',
         'GitPython~=2.1.11',
