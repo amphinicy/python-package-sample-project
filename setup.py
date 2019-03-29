@@ -30,9 +30,12 @@ setup(
     keywords='sample, python, package',
 
     packages=find_packages(),
-    package_data={'': ['new_project_requirements.txt',
-                       'new_project_travis.yml',
-                       'new_project_travis_pypi.yml']},
+    package_data={'': ['cli.py.template',
+                       'test.py.template',
+                       'setup.py.template',
+                       'requirements.txt.template',
+                       'travis.yml.template',
+                       'travis_pypi.yml.template']},
     install_requires=[
         'click~=7.0',
         'GitPython~=2.1.11',
