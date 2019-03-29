@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='${project_name}',
-    version='0.1.0',
+    version='0.1.0.dev0',
 
     description='${project_description}',
     long_description=readme(),
