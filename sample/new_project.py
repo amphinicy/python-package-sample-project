@@ -10,16 +10,23 @@ from collections import namedtuple
 from typing import Callable, AnyStr
 
 
-PROJECT_SETUP = 'setup.py'
-NEW_PROJECT_SETUP = 'new_project_setup.py'
-PROJECT_REQUIREMENTS = 'requirements.txt'
-NEW_PROJECT_REQUIREMENTS = 'new_project_requirements.txt'
-PROJECT_TRAVIS = '.travis.yml'
-NEW_PROJECT_TRAVIS = 'new_project_travis.yml'
-NEW_PROJECT_TRAVIS_PYPI = 'new_project_travis_pypi.yml'
+SETUP = 'setup.py'
+SETUP_TEMPLATE = 'setup.py.template'
+
+CLI = 'cli.py'
+CLI_TEMPLATE = 'cli.py.template'
+
+TEST = 'test_{}.py'
+TEST_TEMPLATE = 'test.py.template'
+
+REQUIREMENTS = 'requirements.txt'
+REQUIREMENTS_TEMPLATE = 'requirements.txt.template'
+
+TRAVIS = '.travis.yml'
+TRAVIS_TEMPLATE = 'travis.yml.template'
+TRAVIS_PYPI_TEMPLATE = 'travis_pypi.yml.template'
+
 PROJECT_INIT = '__init__.py'
-PROJECT_CLI = 'cli.py'
-NEW_PROJECT_CLI = 'new_project_cli.py'
 
 
 Step = namedtuple('Step', 'fn index rollback validator divider_up divider_down')
@@ -125,7 +132,7 @@ class NewProject:
     def _create_setup_py(self) -> None:
         """Creating setup.py ..."""
 
-        with open(os.path.join(self._sample_lib_root_path, NEW_PROJECT_SETUP)) as f:
+        with open(os.path.join(self._sample_lib_root_path, SETUP_TEMPLATE)) as f:
             t = Template(f.read())
             setup_template = t.substitute(project_name=self._project_name,
                                           project_description=self._project_description,
@@ -134,30 +141,30 @@ class NewProject:
                                           project_tags=self._project_tags,
                                           project_github_url=self._project_git_url)
 
-        with open(os.path.join(self._project_root_path, PROJECT_SETUP), 'w') as f:
+        with open(os.path.join(self._project_root_path, SETUP), 'w') as f:
             f.write(setup_template)
 
     @register_step(index=3, rollback='_remove_git_repo')
     def _create_requirements_txt(self) -> None:
         """Creating requirements.txt ..."""
 
-        with open(os.path.join(self._sample_lib_root_path, NEW_PROJECT_REQUIREMENTS)) as f:
+        with open(os.path.join(self._sample_lib_root_path, REQUIREMENTS_TEMPLATE)) as f:
             requirements_template = f.read()
 
-        with open(os.path.join(self._project_root_path, PROJECT_REQUIREMENTS), 'w') as f:
+        with open(os.path.join(self._project_root_path, REQUIREMENTS), 'w') as f:
             f.write(requirements_template)
 
     @register_step(index=4, validator='_use_travis', rollback='_remove_git_repo')
     def _create_travis_yml(self) -> None:
         """Creating .travis.yml ..."""
 
-        with open(os.path.join(self._sample_lib_root_path, NEW_PROJECT_TRAVIS)) as f:
+        with open(os.path.join(self._sample_lib_root_path, TRAVIS_TEMPLATE)) as f:
             travis_template = f.read()
 
-        with open(os.path.join(self._project_root_path, PROJECT_TRAVIS), 'w') as f:
+        with open(os.path.join(self._project_root_path, TRAVIS), 'w') as f:
             if self._use_pypi:
                 with open(os.path.join(self._sample_lib_root_path,
-                                       NEW_PROJECT_TRAVIS_PYPI)) as fi:
+                                       TRAVIS_PYPI_TEMPLATE)) as fi:
                     t = Template(fi.read())
                     travis_pypi_template = t.substitute(
                         pypi_username=self._pypi_username,
@@ -196,14 +203,31 @@ class NewProject:
     def _create_cli(self) -> None:
         """Creating cli.py ..."""
 
-        with open(os.path.join(self._sample_lib_root_path, NEW_PROJECT_CLI)) as f:
+        with open(os.path.join(self._sample_lib_root_path, CLI_TEMPLATE)) as f:
             t = Template(f.read())
             setup_template = t.substitute(project_description=self._project_description)
 
-        with open(os.path.join(self._project_app_dir, PROJECT_CLI), 'w') as f:
+        with open(os.path.join(self._project_app_dir, CLI), 'w') as f:
             f.write(setup_template)
 
-    @register_step(index=8, rollback='_remove_git_repo',
+    @register_step(index=8, rollback='_remove_git_repo')
+    def _create_tests(self) -> None:
+        """Creating tests ..."""
+
+        with open(os.path.join(self._sample_lib_root_path, TEST_TEMPLATE)) as f:
+            t = Template(f.read())
+            pnc = ''.join([f'{s[0].upper()}{s[1:]}'
+                           for s in self._project_name.split('_')])
+            test_template = t.substitute(project_name_class=pnc,
+                                         project_name_test=self._project_name)
+
+        tests_dir = os.path.join(os.path.dirname(self._project_app_dir), 'tests')
+        os.makedirs(tests_dir)
+
+        with open(os.path.join(tests_dir, TEST.format(self._project_name)), 'w') as f:
+            f.write(test_template)
+
+    @register_step(index=9, rollback='_remove_git_repo',
                    divider_down=lambda: click.echo())
     def _create_virtual_environment(self) -> None:
         """Creating virtual environment ..."""
