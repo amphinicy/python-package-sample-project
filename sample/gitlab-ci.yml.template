@@ -1,0 +1,55 @@
+stages:
+  - test
+  - docs
+  # - docker_push
+
+variables:
+  VERSION: "0.1.0"
+  # RELEASE: "0"
+  PRODUCT: ${project_name}
+  # CA: |-
+  #   _insert_certificate_here_
+
+test:
+  image: python:3.7
+  stage: test
+  script:
+  # - apt-get update -y
+  # - apt-get install -y _put_additional_libs_here_
+  - pip install -r ./requirements.txt
+  - pip install -e .
+  - pytest -vvv
+
+docs:
+  image:
+    name: 'jagregory/pandoc'
+    entrypoint: [""]
+  stage: docs
+  dependencies: []
+  before_script: [] # Override the before script
+  script:
+    - /root/.cabal/bin/pandoc --from markdown
+      --template docs/template.tex -V titlepage="true"
+      --toc -V toc-title:"${PRODUCT} ${VERSION}"
+      --listings --highlight-style pygments
+      --metadata="title:${PRODUCT}" --metadata="author:Version ${VERSION}"
+      -o ${PRODUCT}_${VERSION}.pdf
+      docs/*.md CHANGELOG.md
+  artifacts:
+    paths:
+      - ${PRODUCT}_${VERSION}.pdf
+  only:
+    - master
+
+
+# docker_push:
+#   image: docker:stable
+#   stage: docker_push
+#   script:
+#     - echo -n "$O3B_CA" > /usr/local/share/ca-certificates/o3b.crt
+#     - update-ca-certificates
+#     - source docker/ci/build_push.sh
+#   tags:
+#     - dind
+#   only:
+#     - master
