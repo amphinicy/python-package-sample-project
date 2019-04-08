@@ -25,7 +25,7 @@ Create new git repository and enter following command into the terminal:
 > sample new _git_clone_destination_path_
 ```
 
-Replace `_git_clone_destination_path_` with actual path where you want your git repository to be cloned.
+*Replace `_git_clone_destination_path_` with actual path where you want your git repository to be cloned.*
 
 
 ## Zen of Python, by Tim Peters
