@@ -1,12 +1,12 @@
 # Python Package Sample Project
 
-![GitHub issues](https://img.shields.io/github/issues/amphinicy/marine-traffic-client-api.svg)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/amphinicy/marine-traffic-client-api.svg)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/amphinicy/marine-traffic-client-api.svg)
+![GitHub issues](https://img.shields.io/github/issues/amphinicy/python-package-sample-project.svg)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/amphinicy/python-package-sample-project.svg)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/amphinicy/python-package-sample-project.svg)
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Marine-Traffic-API.svg)
-![GitHub](https://img.shields.io/github/license/amphinicy/marine-traffic-client-api.svg?color=blue)
-![GitHub last commit](https://img.shields.io/github/last-commit/amphinicy/marine-traffic-client-api.svg?color=blue)
+![GitHub](https://img.shields.io/github/license/amphinicy/python-package-sample-project.svg?color=blue)
+![GitHub last commit](https://img.shields.io/github/last-commit/amphinicy/python-package-sample-project.svg?color=blue)
 
 
 A sample project on how to make a python package. 
