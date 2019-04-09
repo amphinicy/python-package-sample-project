@@ -17,8 +17,8 @@ setup(
     url='${project_github_url}',
     licence='MIT',
 
-    author='${author_name}',
-    author_email='${author_email}',
+    author='Amphinicy Technologies ltd',
+    author_email='info@amphinicy.com',
 
     classifiers=[
         'Development Status :: 4 - Beta',

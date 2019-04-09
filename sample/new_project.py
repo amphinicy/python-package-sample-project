@@ -110,8 +110,8 @@ class NewProject:
         self._project_description = click.prompt('Enter project description')
         self._project_git_repo = click.prompt('Enter project GitHub url (ssh)')
         self._project_git_url = click.prompt('Enter project GitHub url (https)')
-        self._author_name = click.prompt('Enter project author name')
-        self._author_email = click.prompt('Enter project author e-mail')
+        #self._author_name = click.prompt('Enter project author name')
+        #self._author_email = click.prompt('Enter project author e-mail')
         self._project_tags = click.prompt('Enter project project tags')
 
         click.echo()
@@ -146,8 +146,8 @@ class NewProject:
             t = Template(f.read())
             setup_template = t.substitute(project_name=self._project_name,
                                           project_description=self._project_description,
-                                          author_name=self._author_name,
-                                          author_email=self._author_email,
+                                          #author_name=self._author_name,
+                                          #author_email=self._author_email,
                                           project_tags=self._project_tags,
                                           project_github_url=self._project_git_url)
 
