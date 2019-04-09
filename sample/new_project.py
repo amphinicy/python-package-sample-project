@@ -29,6 +29,9 @@ TRAVIS_PYPI_TEMPLATE = 'travis_pypi.yml.template'
 GITLAB_CI = '.gitlab-ci.yml'
 GITLAB_CI_TEMPLATE = 'gitlab-ci.yml.template'
 
+CHANGELOG = 'CHANGELOG.md'
+CHANGELOG_TEMPLATE = 'CHANGELOG.md.template'
+
 PROJECT_INIT = '__init__.py'
 
 
@@ -204,20 +207,30 @@ class NewProject:
             f.write(gitlab_ci_template)
 
     @register_step(index=6, rollback='_remove_git_repo')
+    def _create_changelog_md(self) -> None:
+        """Creating CHANGELOG.md ..."""
+
+        with open(os.path.join(self._sample_lib_root_path, CHANGELOG_TEMPLATE)) as f:
+            changelog_template = f.read()
+
+        with open(os.path.join(self._project_root_path, CHANGELOG), 'w') as f:
+            f.write(changelog_template)
+
+    @register_step(index=7, rollback='_remove_git_repo')
     def _create_app_dir(self) -> None:
         """Creating python package app dir ..."""
 
         self._project_app_dir = os.path.join(self._project_root_path, self._project_name)
         os.makedirs(self._project_app_dir)
 
-    @register_step(index=7, rollback='_remove_git_repo')
+    @register_step(index=8, rollback='_remove_git_repo')
     def _create_init(self) -> None:
         """Creating __init__.py ..."""
 
         with open(os.path.join(self._project_app_dir, PROJECT_INIT), 'w') as f:
             f.write('')
 
-    @register_step(index=8, rollback='_remove_git_repo')
+    @register_step(index=9, rollback='_remove_git_repo')
     def _create_cli(self) -> None:
         """Creating cli.py ..."""
 
@@ -228,7 +241,7 @@ class NewProject:
         with open(os.path.join(self._project_app_dir, CLI), 'w') as f:
             f.write(setup_template)
 
-    @register_step(index=9, rollback='_remove_git_repo')
+    @register_step(index=10, rollback='_remove_git_repo')
     def _create_tests(self) -> None:
         """Creating tests ..."""
 
@@ -245,7 +258,7 @@ class NewProject:
         with open(os.path.join(tests_dir, TEST.format(self._project_name)), 'w') as f:
             f.write(test_template)
 
-    @register_step(index=10, rollback='_remove_git_repo',
+    @register_step(index=11, rollback='_remove_git_repo',
                    divider_down=lambda: click.echo())
     def _create_virtual_environment(self) -> None:
         """Creating virtual environment ..."""
