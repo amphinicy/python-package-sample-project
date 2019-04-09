@@ -32,6 +32,9 @@ GITLAB_CI_TEMPLATE = 'gitlab-ci.yml.template'
 CHANGELOG = 'CHANGELOG.md'
 CHANGELOG_TEMPLATE = 'CHANGELOG.md.template'
 
+GITIGNORE = '.gitignore'
+GITIGNORE_TEMPLATE = '.gitignore.template'
+
 PROJECT_INIT = '__init__.py'
 
 
@@ -224,13 +227,27 @@ class NewProject:
         os.makedirs(self._project_app_dir)
 
     @register_step(index=8, rollback='_remove_git_repo')
+    def _create_docs_dir(self) -> None:
+        """Creating documentation dir ..."""
+
+        project_docs_images_dir = \
+            os.path.join(self._project_root_path, 'docs', 'images')
+        os.makedirs(project_docs_images_dir)
+
+        with open(os.path.join(self._sample_lib_root_path, GITIGNORE_TEMPLATE)) as f:
+            changelog_template = f.read()
+
+        with open(os.path.join(project_docs_images_dir, GITIGNORE), 'w') as f:
+            f.write(changelog_template)
+
+    @register_step(index=9, rollback='_remove_git_repo')
     def _create_init(self) -> None:
         """Creating __init__.py ..."""
 
         with open(os.path.join(self._project_app_dir, PROJECT_INIT), 'w') as f:
             f.write('')
 
-    @register_step(index=9, rollback='_remove_git_repo')
+    @register_step(index=10, rollback='_remove_git_repo')
     def _create_cli(self) -> None:
         """Creating cli.py ..."""
 
@@ -241,7 +258,7 @@ class NewProject:
         with open(os.path.join(self._project_app_dir, CLI), 'w') as f:
             f.write(setup_template)
 
-    @register_step(index=10, rollback='_remove_git_repo')
+    @register_step(index=11, rollback='_remove_git_repo')
     def _create_tests(self) -> None:
         """Creating tests ..."""
 
@@ -258,7 +275,7 @@ class NewProject:
         with open(os.path.join(tests_dir, TEST.format(self._project_name)), 'w') as f:
             f.write(test_template)
 
-    @register_step(index=11, rollback='_remove_git_repo',
+    @register_step(index=12, rollback='_remove_git_repo',
                    divider_down=lambda: click.echo())
     def _create_virtual_environment(self) -> None:
         """Creating virtual environment ..."""
