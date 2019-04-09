@@ -2,10 +2,16 @@ import click
 
 
 @click.group(help=click.style("${project_description}", fg="green"))
-def cli():
+@click.pass_context
+def cli(ctx):
     """CLi starting point."""
 
+    ctx.obj = {}
 
-@cli.command(help=click.style("__some_command__", fg="green"))
-def some_command():
+
+@cli.command(help=click.style("Hello World", fg="green"))
+@click.pass_context
+def hello_world(ctx):
     """__some_description__"""
+
+    click.echo('Hello world')
