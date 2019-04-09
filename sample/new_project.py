@@ -280,9 +280,9 @@ class NewProject:
     def _create_virtual_environment(self) -> None:
         """Creating virtual environment ..."""
 
-        venv_path = os.path.join(self._project_root_path, '.venv')
+        venv_path = os.path.join(self._project_root_path, f'.{self._project_name}-venv')
         os.system(f'python3 -m venv {venv_path}')
-        pip_path = os.path.join(self._project_root_path, '.venv', 'bin', 'pip')
+        pip_path = os.path.join(venv_path, 'bin', 'pip')
 
         click.echo()
         os.system(f'{pip_path} install -U pip setuptools pytest')
