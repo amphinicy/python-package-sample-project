@@ -6,7 +6,7 @@ class Test${project_name_class}(unittest.TestCase):
     def setUp(self):
         """Prepare test data"""
 
-    def tearDown(cls):
+    def tearDown(self):
         """Destroy test data"""
 
     def test_${project_name_test}(self):
